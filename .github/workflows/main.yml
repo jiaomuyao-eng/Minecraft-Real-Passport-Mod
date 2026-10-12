@@ -1,0 +1,30 @@
+name: Build Fabric Mod
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 拉取仓库代码
+        uses: actions/checkout@v4
+
+      - name: 配置 JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      - name: 赋予gradlew执行权限
+        run: chmod +x gradlew
+
+      - name: 编译打包模组
+        run: ./gradlew build
+
+      - name: 导出成品Jar包
+        uses: actions/upload-artifact@v4
+        with:
+          name: Passport-Mod-Build
+          path: build/libs/*.jar
